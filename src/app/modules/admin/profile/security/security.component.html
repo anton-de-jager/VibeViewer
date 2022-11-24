@@ -1,0 +1,61 @@
+<ng-container *transloco="let t">
+<div class="w-full">
+    <!-- Form -->
+    <form [formGroup]="securityForm">
+
+        <!-- Section -->
+        <div class="w-full">
+            <div class="text-xl">{{t('change_password')}}</div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Current password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{t('current_password')}}</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'passwordCurrent'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
+            </div>
+            <!-- New password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{t('new_password')}}</mat-label>
+                    <mat-icon
+                        class="icon-size-5"
+                        [svgIcon]="'heroicons_solid:key'"
+                        matPrefix></mat-icon>
+                    <input
+                        [formControlName]="'passwordNew'"
+                        type="password"
+                        matInput>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <fuse-alert *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false" [type]="alert.type">
+                {{alert.message}}
+            </fuse-alert>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                (click)="submit()"
+                [disabled]="!securityForm.valid"
+                [color]="'primary'">{{t('submit')}}
+            </button>
+        </div>
+    </form>
+
+</div>
+</ng-container>

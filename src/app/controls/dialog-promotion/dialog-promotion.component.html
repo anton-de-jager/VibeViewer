@@ -1,0 +1,70 @@
+<ng-container *transloco="let t">
+    <h1 mat-dialog-title class="accent dialog-title bg-primary text-on-primary text-secondary"
+        style="margin-bottom: 0px !important;">
+        <div class="flex items-center justify-between">
+            <div class="text-2xl font-semibold leading-tight">{{t('add_promotion')}}</div>
+            <div class="-mr-3">
+                <button mat-icon-button (click)="cancel()">
+                    <mat-icon class="icon-size-5" [svgIcon]="'mat_outline:close'"></mat-icon>
+                </button>
+            </div>
+        </div>
+    </h1>
+    <div mat-dialog-content class="content-dialog-scroll">
+        <form name="form" [formGroup]="form" novalidate>
+            <mat-form-field class="w-full">
+                <mat-label>{{t('title')}}</mat-label><input matInput placeholder="{{t('title')}}"
+                    formControlName="title" id="title" maxlength="50">
+                <mat-error *ngIf="form.get('title').hasError('required')">{{t('title_required')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-full">
+                <mat-label>{{t('content')}}</mat-label>
+                <textarea id="content" matInput [formControlName]="'content'" maxlength="200"></textarea>
+                <mat-error *ngIf="form.get('content').hasError('required')">{{t('content_required')}}</mat-error>
+            </mat-form-field>
+            <div fxLayout fxLayoutAlign="center center"
+                style="margin-top:4px; margin-bottom:12px; cursor: pointer; text-align: center;">
+                <div class="image-box">
+                    <img *ngIf="image" class="image-picker" [src]="image" (click)="captureImage()"
+                        onerror="this.src='assets/images/no-image.jpg';this.onerror='';">
+                    <img *ngIf="!image" class="image-placeholder" src="assets/images/add-image.png"
+                        (click)="captureImage()" onerror="this.src='assets/images/no-image.jpg';this.onerror='';">
+                </div>
+            </div>
+            <!-- <mat-form-field class="w-full">
+            <input matInput [ngxMatDatetimePicker]="picker_promotionDate" placeholder="{{t('choose_date')}}"
+                formControlName="promotionDate">
+            <mat-datepicker-toggle matSuffix [for]="picker_promotionDate"></mat-datepicker-toggle>
+            <ngx-mat-datetime-picker #picker_promotionDate [showSeconds]="false"></ngx-mat-datetime-picker>
+            <mat-hint>MM/DD/YYYY HH:mm:ss</mat-hint>
+            <mat-error>{{t('promotion_date_required')}}</mat-error>
+        </mat-form-field> -->
+            <mat-form-field appearance="fill" class="w-full">
+                <mat-label>{{t('choose_date')}}</mat-label>
+                <input matInput [matDatepicker]="picker" [min]="minDate" [matDatepickerFilter]="filterUsedDates" formControlName="promotionDate" (dateChange)="addEvent($event)">
+                <mat-hint>MM/DD/YYYY</mat-hint>
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <hr>
+            <div fxLayout fxLayoutAlign="center center">
+                <!-- <div id="paypal-button-container"></div>
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="VA7XETKKQY68Y">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0"
+                        name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1"
+                        height="1">
+                </form> -->
+
+                <ngx-paypal *ngIf="showPaypal" [ngClass]="!(form.valid && image && fileToUpload) ? 'disabled' : ''" [config]="payPalConfig"></ngx-paypal>
+            </div>
+        </form>
+    </div>
+    <div mat-dialog-actions class="dialog-footer" align="end">
+        <span style="flex: 1 1 auto;"></span>
+        <button mat-raised-button color="default" (click)="cancel()">{{t('cancel')}}</button>
+        <button *ngIf="!showPaypal" [disabled]="!form.valid || !image || !fileToUpload" mat-raised-button color="primary" (click)="submit()">{{t('submit')}}</button>
+    </div>
+</ng-container>

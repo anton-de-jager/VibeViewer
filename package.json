@@ -81,6 +81,7 @@
         "leaflet-routing-machine": "^3.2.12",
         "lodash-es": "4.17.21",
         "moment": "2.29.4",
+        "nan": "^2.17.0",
         "ng-apexcharts": "1.7.1",
         "ngx-image-swiper": "^1.2.3",
         "ngx-infinite-scroll": "^14.0.0",

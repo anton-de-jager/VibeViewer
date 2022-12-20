@@ -24,14 +24,9 @@ dependencies {
     implementation project(':capacitor-local-notifications')
     implementation project(':capacitor-network')
     implementation project(':capacitor-preferences')
-    implementation project(':capacitor-screen-reader')
     implementation project(':capacitor-share')
-    implementation project(':capacitor-splash-screen')
-    implementation project(':capacitor-status-bar')
-    implementation project(':capacitor-text-zoom')
     implementation project(':capacitor-toast')
-    implementation project(':capacitor-plugin-glassfy')
-    implementation "com.android.billingclient:billing:4.0.0"
+
 }
 
 

@@ -13,6 +13,7 @@ import { EventEmitterService } from 'app/services/event-emitter.service';
 import { upperCase } from 'lodash';
 import { DialogNotificationComponent } from 'app/controls/dialog-notification/dialog-notification.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Browser } from '@capacitor/browser';
 
 @Component({
     selector: 'dashboard',
@@ -95,22 +96,14 @@ export class DashboardComponent implements AfterViewInit {
     }
 
     subscribe(){
-        this.apiService.submitSubscription(this.user.id).subscribe(result => {
-            const dialogConfig = new MatDialogConfig();
-            
-            dialogConfig.data = { title: 'Email Sent', body: 'A subscription link has been sent to <b>' + this.user.email + '</b>' };
+        this.fuseSplashScreenService.show();
+        var url = environment.api + '/api/payfast/subscription';
+        url += '/' + encodeURIComponent(this.user.id.toString()).replace(/%20/g, '+');
+        url += '/' + encodeURIComponent(this.user.email).replace(/%20/g, '+');
+        url += '/199';
+        Browser.open({ url: url, windowName: '_self' });
 
-            dialogConfig.autoFocus = true;
-            dialogConfig.disableClose = true;
-            dialogConfig.hasBackdrop = true;
-            dialogConfig.ariaLabel = 'fffff';
-            dialogConfig.width = "100vw";
-            dialogConfig.maxWidth = "800px";
-            dialogConfig.panelClass = 'full-screen-modal';
-
-            const dialogRef = this.dialog.open(DialogNotificationComponent,
-                dialogConfig);
-        });
+        this.fuseSplashScreenService.hide();
     }
 
     ngAfterViewInit(): void {

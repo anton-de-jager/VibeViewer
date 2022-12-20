@@ -6,75 +6,14 @@
                 <div class="text-4xl font-extrabold tracking-tight leading-tight">Complete Subscription</div>
                 <img src="assets/images/logo/logo.png" class="auth-logo">
             </div>
+
             <hr>
-            <!-- <fuse-alert [type]="'success'">
-                <span fuseAlertTitle>Please create a PayPal account while subscribing</span>
-                <p>This will allow you to get <b>10% commission</b> for every referral.</p>
-            </fuse-alert> -->
 
-            <!-- <hr> -->
-            <!-- <form name="form" [formGroup]="form" novalidate>
-                <mat-form-field appearance="fill">
-                    <mat-label>Debit Date</mat-label>
-                    <input matInput [matDatepicker]="picker" [min]="minDate" [max]="maxDate" formControlName="debitDate"
-                        (dateChange)="dateChanged($event)">
-                    <mat-hint>MM/DD/YYYY</mat-hint>
-                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-datepicker #picker></mat-datepicker>
-                </mat-form-field>
-            </form> -->
-
-            <!-- <ngx-paypal #basic [config]="configs['basic']" [registerScript]="false"></ngx-paypal>
-            <ngx-paypal #advanced [config]="configs['advanced']" [registerScript]="false"></ngx-paypal>
-            <ngx-paypal #advanced [config]="configs['advanced']"></ngx-paypal> -->
-            <!-- <ngx-paypal *ngIf="!loading" [config]="payPalConfig"></ngx-paypal> -->
-
-            <button class="ml-4" mat-flat-button type="button" (click)="subscribe()"
-                [color]="'primary'">Re-Send Subscription Email
-            </button>
-
-            <!-- <form name="PayFastPayNowForm" action="https://www.payfast.co.za/eng/process" method="post">
-                <input type="hidden" name="merchant_id" value="15252850">
-                <input type="hidden" name="merchant_key" value="8n1rbtdsbz6io">
-                <input type="hidden" name="return_url" value="https://vibeviewer.com/subscription-success">
-                <input type="hidden" name="cancel_url" value="https://vibeviewer.com/subscription-cancel">
-                <input type="hidden" name="notify_url" value="https://luvirosapi.com:1880/vibeviewer/api/notify">
-
-                <input type="hidden" name="m_payment_id" value="{{user.id}}">
-                <input type="hidden" name="amount" value="350.00">
-                <input type="hidden" name="item_name" value="Vibe Viewer Subscription">
-            </form>
-
-            <form name="PayFastPayNowForm" action="https://www.payfast.co.za/eng/process" method="post">
-                <input required type="hidden" name="cmd" value="_paynow">
-                <input required type="hidden" name="receiver" pattern="[0-9]" value="15252850">
-                <input type="hidden" name="return_url" value="https://vibeviewer.com/subscription-success">
-                <input type="hidden" name="cancel_url" value="https://vibeviewer.com/subscription-cancel">
-                <input type="hidden" name="notify_url" value="https://luvirosapi.com:1880/vibeviewer/api/notify">
-                <input required type="hidden" name="amount" value="20">
-                <input required type="hidden" name="item_name" maxlength="255" value="Vibe Viewer Subscription">
-                <input required type="hidden" name="subscription_type" pattern="1" value="1">
-                <input type="hidden" name="recurring_amount" value="20">
-                <input required type="hidden" name="cycles" pattern="[0-9]" value="0">
-                <input required type="hidden" name="frequency" pattern="[0-9]" value="3">
-                <table>
-                    <tr>
-                        <td colspan=2 align=center>
-                            <input type="image"
-                                src="https://www.payfast.co.za/images/buttons/Subscribe/Blue-Large-Round-Subscribe.png"
-                                alt="Subscribe" title="Subscribe with PayFast">
-                        </td>
-                    </tr>
-                </table>
-            </form> -->
-            <!-- <ngx-paypal [config]="payPalConfig"></ngx-paypal> -->
-            <!-- <div id="paypal-button-container"></div>
-            <div id="paypal-button-container-P-0RT39502AR598564GMNR2A7Q"></div> -->
-            <!-- <hr>
-            <div id="paypal-button-container-P-2CG554003U583503SMMZ4JJQ"></div>
-            <script
-                src="https://www.paypal.com/sdk/js?client-id=AfPgZ8XPnzI3_8qhrOz6xyMEzIup6_fydXGMXXRluTRwHf4c2CrnVsf-a4H_CdbkUnAW1edVgZYIrBMd&vault=true&intent=subscription"
-                data-sdk-integration-source="button-factory"></script> -->
+            <div class="flex items-center justify-end">
+                <mat-card-title class="text-4xl flex items-center">R199 / month</mat-card-title>
+                <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="subscribe()">Subscribe
+                </button>
+            </div>
         </div>
     </div>
 </div>

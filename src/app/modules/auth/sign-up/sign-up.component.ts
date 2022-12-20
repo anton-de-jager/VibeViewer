@@ -99,7 +99,6 @@ export class AuthSignUpComponent implements OnInit {
                     lon: [this.location.lon],
                     address: [''],
                     email: [localStorage.getItem('loginEmail') !== undefined ? localStorage.getItem('loginEmail') : '', [Validators.required, Validators.email]],
-                    //paypalEmail: ['', [Validators.email]],
                     referralEmail: [this.referral, [Validators.email]],
                     phone: [''],
                     web: [''],
@@ -371,12 +370,6 @@ export class AuthSignUpComponent implements OnInit {
             }
         });
         return promise;
-    }
-
-    paypal() {
-        let url = 'https://www.paypal.com';
-        Browser.open({ url });
-        //https://www.paypal.com/
     }
 
     // uploadTest(fileToUpload, filename): Promise<boolean> {

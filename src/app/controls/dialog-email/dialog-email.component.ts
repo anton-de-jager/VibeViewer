@@ -9,7 +9,6 @@ import { User } from 'app/models/user.model';
 import { Geolocation } from '@capacitor/geolocation';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { Device } from '@capacitor/device';
-import { ICreateOrderRequest, IPayPalConfig } from 'ngx-paypal';
 import { SafeUrl } from '@angular/platform-browser';
 import { Clipboard } from '@capacitor/clipboard';
 import { Toast } from '@capacitor/toast';

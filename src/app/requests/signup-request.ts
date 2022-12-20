@@ -3,8 +3,6 @@ import { Guid } from "guid-typescript";
 export interface SignupRequest {
     userTypeId: Guid;
     email: string;
-    paypalEmail: string;
-    paypalId: string;
     referralEmail: string;
     password: string;
     confirmPassword: string;

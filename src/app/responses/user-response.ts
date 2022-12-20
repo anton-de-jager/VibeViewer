@@ -6,8 +6,6 @@ export interface UserResponse {
     name: string;
     description: string;
     email: string;
-    paypalEmail: string;
-    paypalId: string;
     phone: string;
     web: string;
     lat: number;

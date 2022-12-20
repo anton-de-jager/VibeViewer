@@ -19,7 +19,6 @@ import { NotificationService } from './services/localnotification.service';
 import { AuthInterceptorProvider } from './interceptors/auth.interceptor';
 import { ErrorInterceptorProvider } from './interceptors/error.interceptor';
 import { DataService } from './services/data.service';
-import { PayPal } from '@ionic-native/paypal/ngx';
 //import { Glassfy } from "capacitor-plugin-glassfy" ;
 
 const routerConfig: ExtraOptions = {
@@ -57,8 +56,7 @@ const routerConfig: ExtraOptions = {
         ApiService,
         EventEmitterService,
         NotificationService,
-        DataService,
-        PayPal
+        DataService
     ],
     bootstrap: [
         AppComponent

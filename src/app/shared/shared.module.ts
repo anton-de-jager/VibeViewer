@@ -22,7 +22,6 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FuseAlertModule } from '@fuse/components/alert';
-import { NgxPayPalModule } from 'ngx-paypal';
 import { StarRatingComponent } from 'app/controls/star-rating/star-rating.component';
 import { MapComponent } from 'app/controls/map/map.component';
 import { SortComponent } from 'app/controls/sort/sort.component';
@@ -79,7 +78,6 @@ import { QRCodeModule } from 'angularx-qrcode';
         MatSidenavModule,
         MatExpansionModule,
         MatPaginatorModule,
-        NgxPayPalModule,
         FuseScrollbarModule,
         MatRadioModule,
         MatSlideToggleModule,
@@ -119,7 +117,6 @@ import { QRCodeModule } from 'angularx-qrcode';
         FuseAlertModule,
         MatSelectModule,
         MatPaginatorModule,
-        NgxPayPalModule,
         FuseScrollbarModule,
         MatRadioModule,
         MatSlideToggleModule,

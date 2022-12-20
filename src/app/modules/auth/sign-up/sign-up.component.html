@@ -138,21 +138,6 @@
                         </mat-error>
                     </div>
 
-                    <!-- <mat-form-field class="w-full">
-                        <mat-label>{{t('paypal_email')}}</mat-label>
-                        <input id="paypalEmail" matInput [formControlName]="'paypalEmail'">
-                        <mat-error *ngIf="signUpForm.get('paypalEmail').hasError('paypalEmail')">
-                            {{t('email_validation')}}
-                        </mat-error>
-                    </mat-form-field> -->
-                    <!-- <fuse-alert [type]="'success'">
-                        <span fuseAlertTitle>Commissions</span>
-                        <button mat-mini-fab color="accent" style="position: absolute;right: 0;top: 0;">
-                            <img src="assets/images/paypal.png" style="width: 70%;" (click)="paypal()">
-                        </button>
-                        Commissions are paid into your PayPal account
-                    </fuse-alert> -->
-
                     <mat-form-field class="w-full"
                         *ngIf="signUpForm.value.userTypeId !== '463af20d-e093-4ca0-9ac1-23909de39f9c' && signUpForm.value.userTypeId !== '' && !referralEmailExists">
                         <mat-label>{{t('referral_email')}}</mat-label>
@@ -239,9 +224,6 @@
                                     <li>Resellers will receive 10% of any amount paid by a venue referred by the
                                         reseller.</li>
                                     <li>This includes monthly subscriptions as well as promotions.</li>
-                                    <li>Commission payments are made to their PayPal accounts.</li>
-                                    <li> A PayPal Email can be set up on the Profile Page.</li>
-                                    <li>Payments are made every Monday at 08:00 (GMT+2)</li>
                                 </ul>
                             </mat-expansion-panel>
 

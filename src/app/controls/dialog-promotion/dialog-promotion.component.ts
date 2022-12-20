@@ -7,7 +7,6 @@ import { VariableService } from 'app/services/variable.service';
 import { FormGroup, FormControl, FormBuilder, Validators } from "@angular/forms";
 import { User } from 'app/models/user.model';
 import { Geolocation } from '@capacitor/geolocation';
-import { ICreateOrderRequest, IPayPalConfig } from 'ngx-paypal';
 import { environment } from 'environments/environment';
 import { Promotion } from 'app/models/promotion.model';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -28,9 +27,8 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
   fileToUpload: any;
   form: FormGroup;
   userItems: User[];
-  public payPalConfig?: IPayPalConfig;
   promotionList: Promotion[];
-  showPaypal = false;
+  showSubmit = false;
   minDate: Date;
 
   constructor(
@@ -55,66 +53,6 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.initConfig();
-    //this.initConfig();
-    // this.payPalConfig = {
-    //   currency: 'USD',
-    //   clientId: 'AUDcxIQ0BpCD0O1y6mkBzMMxcdQDqea0CF7ql6X8C8RxcMZPdaUuqbShFl1T-PTfiVhU9JUsvN23Cf7B',
-    //   createOrderOnClient: (data) => <ICreateOrderRequest>{
-    //     intent: 'CAPTURE',
-    //     purchase_units: [{
-    //       amount: {
-    //         currency_code: 'USD',
-    //         value: '5',
-    //         breakdown: {
-    //           item_total: {
-    //             currency_code: 'USD',
-    //             value: '5'
-    //           }
-    //         }
-    //       },
-    //       items: [{
-    //         name: 'Promotion',
-    //         quantity: '1',
-    //         category: 'DIGITAL_GOODS',
-    //         unit_amount: {
-    //           currency_code: 'USD',
-    //           value: '5',
-    //         },
-    //       }]
-    //     }]
-    //   },
-    //   advanced: {
-    //     commit: 'true'
-    //   },
-    //   style: {
-    //     label: 'paypal',
-    //     layout: 'vertical'
-    //   },
-    //   onApprove: (data, actions) => {
-    //     console.log('onApprove - transaction was approved, but not authorized', data, actions);
-    //     actions.order.get().then(details => {
-    //       console.log('onApprove - you can get full order details inside onApprove: ', details);
-    //     });
-
-    //   },
-    //   onClientAuthorization: (data) => {
-    //     console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-    //     //this.showSuccess = true;
-    //   },
-    //   onCancel: (data, actions) => {
-    //     console.log('OnCancel', data, actions);
-    //     //this.showCancel = true;
-
-    //   },
-    //   onError: err => {
-    //     console.log('OnError', err);
-    //     //this.showError = true;
-    //   },
-    //   onClick: (data, actions) => {
-    //     console.log('onClick', data, actions);
-    //     //this.resetStatus();
-    //   }
-    // };
   }
 
   filterUsedDates = (d: Date): boolean => {
@@ -130,10 +68,10 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
   }
 
   addEvent(event: MatDatepickerInputEvent<Date>) {
-    this.showPaypal = false;
+    this.showSubmit = false;
     this.promotionList.forEach(element => {
-      if(this.getWeekNumber(element.promotionDate) == this.getWeekNumber(event.value)){
-        this.showPaypal = true;
+      if (this.getWeekNumber(element.promotionDate) == this.getWeekNumber(event.value)) {
+        this.showSubmit = true;
       }
     });
   }
@@ -154,55 +92,6 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
   // }
 
   ngAfterViewInit(): void {
-    // setTimeout(() => {
-    //   // Render the PayPal button into #paypal-button-container
-    //   <any>window['paypal'].Buttons({
-    //     style: {
-    //       shape: 'pill',
-    //       color: 'silver',
-    //       layout: 'vertical',
-    //       label: 'subscribe'
-    //     },
-    //     createSubscription: function (data, actions) {
-    //       return actions.subscription.create({
-    //         /* Creates the subscription */
-    //         plan_id: 'P-83N86231GP6587744MNBZB3A'
-    //       });
-    //     },
-    //     onApprove: function (data, actions) {
-    //       this.apiService.activate({
-    //         userId: this.user.id.toString(),
-    //         orderId: data.orderID,
-    //         subscriptionId: data.subscriptionID,
-    //         price: 19.90
-    //       }).subscribe(result => {
-    //         this.userService.getUserInfo().subscribe(
-    //           {
-    //             next: (data => {
-    //               this.user = data;
-    //               this.eventEmitterService.onChangeUser(this.user);
-    //               this._changeDetectorRef.markForCheck();
-
-    //               if (!this.user) {
-    //                 localStorage.removeItem('AT');
-    //                 localStorage.removeItem('RT');
-    //                 localStorage.removeItem('ID');
-    //                 this.router.navigateByUrl('/sign-in');
-    //               }
-    //               this.eventEmitterService.onChangePage('subscription');
-    //             }),
-    //             error: (() => {
-    //               localStorage.removeItem('AT');
-    //               localStorage.removeItem('RT');
-    //               localStorage.removeItem('ID');
-    //             })
-    //           }
-
-    //         );
-    //       });
-    //     }
-    //   }).render('#paypal-button-container');
-    // }, 2000);
   }
 
   async captureImage() {
@@ -258,69 +147,69 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
   }
 
   private initConfig(): void {
-    setTimeout(() => {
-      this.payPalConfig = {
-        currency: 'USD',
-        clientId: environment.paypalClientId,
-        //fundingSource: 'CARD',                
-        createOrderOnClient: (data) => <ICreateOrderRequest>{
-          intent: 'CAPTURE',
-          purchase_units: [
-            {
-              amount: {
-                currency_code: 'USD',
-                value: '5',
-                breakdown: {
-                  item_total: {
-                    currency_code: 'USD',
-                    value: '5'
-                  }
-                }
-              },
-              items: [
-                {
-                  name: 'Vibe Viewer Promotion',
-                  quantity: '1',
-                  category: 'DIGITAL_GOODS',
-                  unit_amount: {
-                    currency_code: 'USD',
-                    value: '5',
-                  },
-                }
-              ]
-            }
-          ]
-        },
-        advanced: {
-          commit: 'true'
-        },
-        style: {
-          label: 'paypal',
-          layout: 'vertical',
-          shape: 'pill'
-        },
-        onApprove: (data, actions) => {
-          console.log('onApprove - transaction was approved, but not authorized', data, actions);
-          this.form.controls['urlImage'].setValue(this.image);
-          this.form.controls['fileToUpload'].setValue(this.fileToUpload);
-          setTimeout(() => {
-            this.dialogRef.close(this.form.value);
-          }, 200);
-        },
-        onClientAuthorization: (data) => {
-          console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-        },
-        onCancel: (data, actions) => {
-          console.log('OnCancel', data, actions);
-        },
-        onError: err => {
-          console.log('OnError', err);
-        },
-        onClick: (data, actions) => {
-          console.log('onClick', data, actions);
-        },
-      };
-    }, 2000);
+    // setTimeout(() => {
+    //   this.payPalConfig = {
+    //     currency: 'USD',
+    //     clientId: environment.paypalClientId,
+    //     //fundingSource: 'CARD',                
+    //     createOrderOnClient: (data) => <ICreateOrderRequest>{
+    //       intent: 'CAPTURE',
+    //       purchase_units: [
+    //         {
+    //           amount: {
+    //             currency_code: 'USD',
+    //             value: '5',
+    //             breakdown: {
+    //               item_total: {
+    //                 currency_code: 'USD',
+    //                 value: '5'
+    //               }
+    //             }
+    //           },
+    //           items: [
+    //             {
+    //               name: 'Vibe Viewer Promotion',
+    //               quantity: '1',
+    //               category: 'DIGITAL_GOODS',
+    //               unit_amount: {
+    //                 currency_code: 'USD',
+    //                 value: '5',
+    //               },
+    //             }
+    //           ]
+    //         }
+    //       ]
+    //     },
+    //     advanced: {
+    //       commit: 'true'
+    //     },
+    //     style: {
+    //       label: 'paypal',
+    //       layout: 'vertical',
+    //       shape: 'pill'
+    //     },
+    //     onApprove: (data, actions) => {
+    //       console.log('onApprove - transaction was approved, but not authorized', data, actions);
+    //       this.form.controls['urlImage'].setValue(this.image);
+    //       this.form.controls['fileToUpload'].setValue(this.fileToUpload);
+    //       setTimeout(() => {
+    //         this.dialogRef.close(this.form.value);
+    //       }, 200);
+    //     },
+    //     onClientAuthorization: (data) => {
+    //       console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
+    //     },
+    //     onCancel: (data, actions) => {
+    //       console.log('OnCancel', data, actions);
+    //     },
+    //     onError: err => {
+    //       console.log('OnError', err);
+    //     },
+    //     onClick: (data, actions) => {
+    //       console.log('onClick', data, actions);
+    //     },
+    //   };
+    // }, 2000);
   }
 
   cancel(): void {
@@ -332,14 +221,18 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
     // }, 200);
   }
   submit(): void {
-    let proceed = true;
-    if (!this.form.controls['userId'].value || !this.image || !this.fileToUpload || !this.form.valid) {
-      proceed = false;
-    }
-    if (proceed) {
-      this.form.controls['urlImage'].setValue(this.image);
-      this.form.controls['fileToUpload'].setValue(this.fileToUpload);
-      this.dialogRef.close(this.form.value);
+    if (!this.showSubmit) {
+      let proceed = true;
+      if (!this.form.controls['userId'].value || !this.image || !this.fileToUpload || !this.form.valid) {
+        proceed = false;
+      }
+      if (proceed) {
+        this.form.controls['urlImage'].setValue(this.image);
+        this.form.controls['fileToUpload'].setValue(this.fileToUpload);
+        this.dialogRef.close(this.form.value);
+      }
+    } else {
+
     }
   }
 }

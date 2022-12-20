@@ -15,8 +15,6 @@ export class User {
     urlImage: string;
     ts: Date;
     statusId: Guid;
-    paypalEmail: string;
-    paypalId: string;
 
     constructor(
         id: Guid,
@@ -32,9 +30,7 @@ export class User {
         address: string,
         urlImage: string,
         ts: Date,
-        statusId: Guid,
-        paypalEmail: string,
-        paypalId: string
+        statusId: Guid
     ) {
         this.id = id;
         this.parentId = parentId;
@@ -50,7 +46,5 @@ export class User {
         this.urlImage = urlImage;
         this.ts = ts;
         this.statusId = statusId;
-        this.paypalEmail = paypalEmail;
-        this.paypalId = paypalId;
     }
 }

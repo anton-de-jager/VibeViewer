@@ -2,17 +2,17 @@ import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewCh
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from 'app/shared/shared.service';
 import { VariableService } from 'app/services/variable.service';
-import { IPayPalConfig, ICreateOrderRequest, ICreateSubscriptionRequest, NgxPaypalComponent, PayPalScriptService } from 'ngx-paypal';
 import { UserService } from 'app/core/user/user.service';
 import { UserService as UserServiceApp } from 'app/services/user.service';
 import { EventEmitterService } from 'app/services/event-emitter.service';
-import { PayPal, PayPalPayment, PayPalConfiguration } from '@ionic-native/paypal/ngx';
 import { ApiService } from 'app/services/api.service';
 import { environment } from 'environments/environment';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Md5 } from 'ts-md5';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DialogNotificationComponent } from 'app/controls/dialog-notification/dialog-notification.component';
+import { FuseSplashScreenService } from '@fuse/services/splash-screen';
+import { Browser } from '@capacitor/browser';
 
 @Component({
     selector: 'subscription',
@@ -22,7 +22,6 @@ import { DialogNotificationComponent } from 'app/controls/dialog-notification/di
 export class SubscriptionComponent implements OnInit, AfterViewInit {
     user: any;
     planId = '';
-    public payPalConfig?: IPayPalConfig;
     loading = true;
 
     paymentAmount: string = '19.80';
@@ -83,8 +82,7 @@ export class SubscriptionComponent implements OnInit, AfterViewInit {
         private eventEmitterService: EventEmitterService,
         private _formBuilder: FormBuilder,
         private dialog: MatDialog,
-        private payPal: PayPal,
-        private payPalScriptService: PayPalScriptService
+        private fuseSplashScreenService: FuseSplashScreenService
     ) {
         // const date = new Date();
         // this.minDate = new Date();
@@ -104,12 +102,6 @@ export class SubscriptionComponent implements OnInit, AfterViewInit {
         //this.initConfig();
         this._userService.get().subscribe(user => {
             this.user = user;
-            // this.planId = this.user.code == environment.paypalFreeCode ? environment.paypalPlanIdFree : environment.paypalPlanId;
-            // this.eventEmitterService.onChangeUser(user);
-
-            // this.createButtons();
-
-            // //this.buildForm();
 
             if (!this.user) {
                 localStorage.removeItem('AT');
@@ -139,324 +131,21 @@ export class SubscriptionComponent implements OnInit, AfterViewInit {
     }
 
     createButtons() {
-        this.loading = true;
-        this.payPalConfig = {
-            currency: 'USD',
-            clientId: environment.paypalClientId,
-            vault: "true",
-            intent: "subscription",
-            //fundingSource: 'CARD',
-            createSubscriptionOnClient: (data) => <ICreateSubscriptionRequest>{
-                plan_id: this.plans.find(x => x.days == this.diff).planId,// 'P-8VT64768BR920974VMNVUFGQ',//this.planId,
-                custom_id: this.user.id.toString()
-            },
-            advanced: {
-                commit: 'true',
-                //locale: 'US'
-            },
-            style: {
-                label: 'subscribe',
-                layout: 'vertical',
-                shape: 'pill'
-            },
-            onApprove: (data, actions) => {
-                // facilitatorAccessToken: "A21AAJPkGzeulCJOyjhRyJd8cGYD3FDhXb3zbtc4L101axTg9SUTmpMPfkZX7e8hV67yKC1HB7QkhGZX_JkKdUe0qHimeWyng"
-                // orderID: "909241869F8769929"
-                // paymentSource: "card"
-                // subscriptionID: "I-FJW8G9B8UAC8"
-                this.apiService.activate({
-                    userId: this.user.id.toString(),
-                    orderId: data.orderID,
-                    subscriptionId: data.subscriptionID,
-                    price: 19.80,
-                }).subscribe(result => {
-                    this.userService.getUserInfo().subscribe(
-                        {
-                            next: (data => {
-                                this.user = data;
-                                this.eventEmitterService.onChangeUser(this.user);
-                                this._changeDetectorRef.markForCheck();
+    }
 
-                                if (!this.user) {
-                                    localStorage.removeItem('AT');
-                                    localStorage.removeItem('RT');
-                                    localStorage.removeItem('ID');
-                                    this.router.navigateByUrl('/sign-in');
-                                }
-                                this.eventEmitterService.onChangePage('subscription');
-                                this.router.navigateByUrl('dashboard');
-                            }),
-                            error: (() => {
-                                localStorage.removeItem('AT');
-                                localStorage.removeItem('RT');
-                                localStorage.removeItem('ID');
-                            })
-                        }
+    subscribe() {
+        this.fuseSplashScreenService.show();
+        var url = environment.api + '/api/payfast/subscription';
+        url += '/' + encodeURIComponent(this.user.id.toString()).replace(/%20/g, '+');
+        url += '/' + encodeURIComponent(this.user.email).replace(/%20/g, '+');
+        url += '/199';
+        Browser.open({ url: url, windowName: '_self' });
 
-                    );
-                });
-            },
-            onClientAuthorization: (data) => {
-                console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-                //this.showSuccess = true;
-            },
-            onCancel: (data, actions) => {
-                console.log('OnCancel', data, actions);
-                //this.showCancel = true;
-
-            },
-            onError: (err) => {
-                console.log('OnError', err);
-                //this.showError = true;
-            },
-            onClick: (data, actions) => {
-                console.log('onClick', data, actions);
-                //this.resetStatus();
-            }
-        };
-        setTimeout(() => {
-            this.loading = false;
-        }, 200);
+        this.fuseSplashScreenService.hide();
     }
 
     ngAfterViewInit() {
-
-
-
-        // this.plans.map((plan) => {
-        //     this.configs[plan.name] = this.getConfig(plan.id);
-        //     console.log(this.getConfig(plan.id));
-        // });
-        // this.payPalScriptService.registerPayPalScript(
-        //     {
-        //         clientId: 'AYAzRER3rHoWEr9LjxRKw9pbe09kNOeZzis2ib61gWZnXTTJK5lnGoDBEwQQlBHFEpM2DZdj6o6Men4y',
-        //         currency: "USD",
-        //         vault: "true",
-        //     },
-        //     (payPalApi) => {
-        //         if (this.basicSubscription) {
-        //             this.basicSubscription.customInit(payPalApi);
-        //         }
-        //         if (this.advancedSubscription) {
-        //             this.advancedSubscription.customInit(payPalApi);
-        //         }
-        //     }
-        // );
-
-        // this.initConfig();
-        // setTimeout(() => {
-        //     // Render the PayPal button into #paypal-button-container
-        //     <any>window['paypal'].Buttons({
-        //         clientId: 'AYAzRER3rHoWEr9LjxRKw9pbe09kNOeZzis2ib61gWZnXTTJK5lnGoDBEwQQlBHFEpM2DZdj6o6Men4y',
-        //         style: {
-        //             shape: 'pill',
-        //             color: 'silver',
-        //             layout: 'vertical',
-        //             label: 'subscribe'
-        //         },
-        //         createSubscription: function (data, actions) {
-        //             return actions.subscription.create({
-        //                 /* Creates the subscription */
-        //                 plan_id: 'P-0RT39502AR598564GMNR2A7Q'
-        //             });
-        //         },
-        //         onApprove: function (data, actions) {
-        //             this.apiService.activate({
-        //                 userId: this.user.id.toString(),
-        //                 orderId: data.orderID,
-        //                 subscriptionId: data.subscriptionID,
-        //                 price: 19.90
-        //             }).subscribe(result => {
-        //                 this.userService.getUserInfo().subscribe(
-        //                     {
-        //                         next: (data => {
-        //                             this.user = data;
-        //                             this.eventEmitterService.onChangeUser(this.user);
-        //                             this._changeDetectorRef.markForCheck();
-
-        //                             if (!this.user) {
-        //                                 localStorage.removeItem('AT');
-        //                                 localStorage.removeItem('RT');
-        //                                 localStorage.removeItem('ID');
-        //                                 this.router.navigateByUrl('/sign-in');
-        //                             }
-        //                             this.eventEmitterService.onChangePage('subscription');
-        //                         }),
-        //                         error: (() => {
-        //                             localStorage.removeItem('AT');
-        //                             localStorage.removeItem('RT');
-        //                             localStorage.removeItem('ID');
-        //                         })
-        //                     }
-
-        //                 );
-        //             });
-        //         }
-        //     }).render('#paypal-button-container');
-        // }, 2000);
-        //     setTimeout(() => {
-        //         this.paypal.Buttons({
-        //             style: {
-        //                 shape: 'pill',
-        //                 color: 'silver',
-        //                 layout: 'vertical',
-        //                 label: 'subscribe'
-        //             },
-        //             createSubscription: function (data, actions) {
-        //                 return actions.subscription.create({
-        //                     /* Creates the subscription */
-        //                     plan_id: 'P-2CG554003U583503SMMZ4JJQ'
-        //                 });
-        //             },
-        //             onApprove: function (data, actions) {
-        //                 console.log(data);
-        //                 alert(data.subscriptionID); // You can add optional success message for the subscriber here
-        //             }
-        //         }).render('#paypal-button-container-P-0RT39502AR598564GMNR2A7Q'); // Renders the PayPal button
-        //     }, 10000);
     }
-
-    // getConfig(plan_id: string): IPayPalConfig {
-    //     return {
-    //         clientId: 'AUDcxIQ0BpCD0O1y6mkBzMMxcdQDqea0CF7ql6X8C8RxcMZPdaUuqbShFl1T-PTfiVhU9JUsvN23Cf7B',
-    //         currency: "USD",
-    //         vault: "true",
-    //         style: {
-    //             label: "paypal",
-    //             layout: "vertical",
-    //             shape: "pill",
-    //             color: "silver",
-    //             tagline: false,
-    //         },
-    //         createSubscription: (data) => <ICreateSubscriptionRequest>{
-    //             plan_id: plan_id
-    //         },
-    //         onApprove: function (data, actions) {
-    //             this.apiService.activate({
-    //                 userId: this.user.id.toString(),
-    //                 orderId: data.orderID,
-    //                 subscriptionId: data.subscriptionID,
-    //                 price: 19.80
-    //             }).subscribe(result => {
-    //                 this.userService.getUserInfo().subscribe(
-    //                     {
-    //                         next: (data => {
-    //                             this.user = data;
-    //                             this.eventEmitterService.onChangeUser(this.user);
-    //                             this._changeDetectorRef.markForCheck();
-
-    //                             if (!this.user) {
-    //                                 localStorage.removeItem('AT');
-    //                                 localStorage.removeItem('RT');
-    //                                 localStorage.removeItem('ID');
-    //                                 this.router.navigateByUrl('/sign-in');
-    //                             }
-    //                             this.eventEmitterService.onChangePage('subscription');
-    //                             this.router.navigateByUrl('/dashboard');
-    //                         }),
-    //                         error: (() => {
-    //                             localStorage.removeItem('AT');
-    //                             localStorage.removeItem('RT');
-    //                             localStorage.removeItem('ID');
-    //                         })
-    //                     }
-
-    //                 );
-    //             });
-    //         },
-    //         onCancel: (data, actions) => {
-    //             console.log("OnCancel", data, actions);
-    //         },
-    //         onError: (err) => {
-    //             console.log("OnError", err);
-    //         },
-    //         onClick: (data, actions) => {
-    //             console.log("Clicked:", data, actions);
-    //         },
-    //     };
-    // }
-
-    // private initConfig(): void {
-    //     setTimeout(() => {
-    //         this.payPalConfig = {
-    //             currency: 'USD',
-    //             intent: 'subscription',
-    //             vault: 'true',
-    //             clientId: 'AYAzRER3rHoWEr9LjxRKw9pbe09kNOeZzis2ib61gWZnXTTJK5lnGoDBEwQQlBHFEpM2DZdj6o6Men4y',
-    //             createSubscription: (data) => <ICreateSubscriptionRequest>{
-    //                 plan_id: 'P-0RT39502AR598564GMNR2A7Q'
-    //             },
-    //             advanced: {
-    //                 commit: 'true'
-    //             },
-    //             style: {
-    //                 label: 'subscribe',
-    //                 layout: 'vertical',
-    //                 shape: 'pill'
-    //             },
-    //             onApprove: (data, actions) => {
-    //                 this.apiService.activate({
-    //                     userId: this.user.id.toString(),
-    //                     orderId: data.orderID,
-    //                     subscriptionId: data.subscriptionID,
-    //                     price: 19.80
-    //                 }).subscribe(result => {
-    //                     this.userService.getUserInfo().subscribe(
-    //                         {
-    //                             next: (data => {
-    //                                 this.user = data;
-    //                                 this.eventEmitterService.onChangeUser(this.user);
-    //                                 this._changeDetectorRef.markForCheck();
-
-    //                                 if (!this.user) {
-    //                                     localStorage.removeItem('AT');
-    //                                     localStorage.removeItem('RT');
-    //                                     localStorage.removeItem('ID');
-    //                                     this.router.navigateByUrl('/sign-in');
-    //                                 }
-    //                                 this.eventEmitterService.onChangePage('subscription');
-    //                                 this.router.navigateByUrl('/dashboard');
-    //                             }),
-    //                             error: (() => {
-    //                                 localStorage.removeItem('AT');
-    //                                 localStorage.removeItem('RT');
-    //                                 localStorage.removeItem('ID');
-    //                             })
-    //                         }
-
-    //                     );
-    //                 });
-    //             },
-    //             onClientAuthorization: (data) => {
-    //                 console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-    //             },
-    //             onCancel: (data, actions) => {
-    //                 console.log('OnCancel', data, actions);
-    //             },
-    //             onError: err => {
-    //                 console.log('OnError', err);
-    //             },
-    //             onClick: (data, actions) => {
-    //                 console.log('onClick', data, actions);
-    //             },
-    //         };
-    //     }, 2000);
-    // }
-
-    // basicAuth = 'Basic QWNWUTBIX05QTVlWMDIzSDhMM3Y2alhNcDRVdaUN2V0M4Mmo4a19hodjdkdS14M3F4dFJ6Y2pNTnRPcGN6OUpPdjU1TW9jTllsEV1p5WURWNm46RUZJRWtJd0dYdDFJSTdFRmlEdVQ3UWExV2ZXWDZnYmw3Z2w5ajgwZVlsVjI1ODdfUTRHSUxCSWxZfOGg1SzRRZTFhMZU1yVgFZGRThIWXAyRjA=';
-    // getSubcriptionDetails(subcriptionId) {
-    //     const xhttp = new XMLHttpRequest();
-    //     xhttp.onreadystatechange = function () {
-    //         if (this.readyState === 4 && this.status === 200) {
-    //             console.log(JSON.parse(this.responseText));
-    //             alert(JSON.stringify(this.responseText));
-    //         }
-    //     };
-    //     xhttp.open('GET', 'https://api.sandbox.paypal.com/v1/billing/subscriptions/' + subcriptionId, true);
-    //     xhttp.setRequestHeader('Authorization', this.basicAuth);
-
-    //     xhttp.send();
-    // }
 
     generateSignature = (data, passPhrase = null) => {
         // Create parameter string
@@ -478,25 +167,6 @@ export class SubscriptionComponent implements OnInit, AfterViewInit {
         return Md5.hashStr(getString);
         //return crypto.createHash("md5").update(getString).digest("hex");
     };
-
-    subscribe(){
-        this.apiService.submitSubscription(this.user.id).subscribe(result => {
-            const dialogConfig = new MatDialogConfig();
-            
-            dialogConfig.data = { title: 'Email Sent', body: 'A subscription link has been sent to <b>' + this.user.email + '</b>' };
-
-            dialogConfig.autoFocus = true;
-            dialogConfig.disableClose = true;
-            dialogConfig.hasBackdrop = true;
-            dialogConfig.ariaLabel = 'fffff';
-            dialogConfig.width = "100vw";
-            dialogConfig.maxWidth = "800px";
-            dialogConfig.panelClass = 'full-screen-modal';
-
-            const dialogRef = this.dialog.open(DialogNotificationComponent,
-                dialogConfig);
-        });
-    }
 
     getFormData(){
         let date = new Date();

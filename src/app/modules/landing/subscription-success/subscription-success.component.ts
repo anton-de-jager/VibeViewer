@@ -8,7 +8,6 @@ import { Browser } from '@capacitor/browser';
 import { UserService } from 'app/core/user/user.service';
 import { EventEmitterService } from 'app/services/event-emitter.service';
 import { User } from 'app/models/user.model';
-import { PayPal, PayPalPayment, PayPalConfiguration } from '@ionic-native/paypal/ngx';
 
 @Component({
     selector: 'subscription-success',
@@ -24,8 +23,7 @@ export class SubscriptionSuccessComponent {
         public variableService: VariableService,
         private _router: Router,
         private _userService: UserService,
-        private eventEmitterService: EventEmitterService,
-        private payPal: PayPal
+        private eventEmitterService: EventEmitterService
     ) {
         this.native = Capacitor.isNativePlatform() ? 'White' : '';
         this._userService.get().subscribe(user => {

@@ -99,17 +99,6 @@
                     </mat-form-field>
                 </div>
 
-                <div class="sm:col-span-2">
-                    <mat-form-field class="w-full">
-                        <mat-label>{{t('paypal_email')}}</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:mail'" matPrefix></mat-icon>
-                        <input id="paypalEmail" matInput [formControlName]="'paypalEmail'">
-                        <mat-error *ngIf="accountForm.get('paypalEmail').hasError('paypalEmail')">
-                            {{t('paypal_email_validation')}}
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-
                 <div class="sm:col-span-4 mb-4"
                     *ngIf="accountForm.value.userTypeId !== '463af20d-e093-4ca0-9ac1-23909de39f9c' && accountForm.value.userTypeId !== ''">
                     <div fxLayout fxLayoutAlign="center center"

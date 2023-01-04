@@ -60,16 +60,16 @@ export class DashboardComponent implements AfterViewInit {
                 localStorage.removeItem('ID');
                 this.router.navigateByUrl('/sign-in');
             } else {
-                var Difference_In_Time = new Date().getTime() - new Date(this.user.ts).getTime();
-                var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-                console.log(Difference_In_Days);
-                if (Guid.parse(this.user.statusId).toString() !== Guid.parse('8225b68c-0691-4cb7-aff2-5efe9866f434').toString() && Difference_In_Days > 14) {
-                    this.router.navigateByUrl('/subscription');
-                }
-                if (Guid.parse(this.user.statusId).toString() !== Guid.parse('8225b68c-0691-4cb7-aff2-5efe9866f434').toString() && Difference_In_Days <= 14) {
-                    this.trial = true;
-                    this.daysLeft = (14 - Difference_In_Days).toFixed(0);
-                }
+                // var Difference_In_Time = new Date().getTime() - new Date(this.user.ts).getTime();
+                // var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+                // console.log(Difference_In_Days);
+                // if (Guid.parse(this.user.statusId).toString() !== Guid.parse('8225b68c-0691-4cb7-aff2-5efe9866f434').toString() && Difference_In_Days > 14) {
+                //     this.router.navigateByUrl('/subscription');
+                // }
+                // if (Guid.parse(this.user.statusId).toString() !== Guid.parse('8225b68c-0691-4cb7-aff2-5efe9866f434').toString() && Difference_In_Days <= 14) {
+                //     this.trial = true;
+                //     this.daysLeft = (14 - Difference_In_Days).toFixed(0);
+                // }
                 this.apiService.getDashboard(this.user.id).subscribe(dashboard => {
                     this.review = dashboard.review;
                     this.reviewVibe = dashboard.reviewVibe;

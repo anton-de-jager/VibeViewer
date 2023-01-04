@@ -21,7 +21,6 @@ import { DialogReviewComponent } from 'app/controls/dialog-review/dialog-review.
 import { Browser } from '@capacitor/browser';
 import { Toast } from '@capacitor/toast';
 import { DialogMapComponent } from 'app/controls/dialog-map/dialog-map.component';
-//import { PullToRefreshService } from '@piumaz/pull-to-refresh';
 import { User } from 'app/models/user.model';
 import { App } from '@capacitor/app';
 import { upperCase } from 'lodash';

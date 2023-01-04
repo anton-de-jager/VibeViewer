@@ -6,7 +6,6 @@ import { landingHomeRoutes } from 'app/modules/landing/home/home.routing';
 import { LanguagesModule } from 'app/layout/common/languages/languages.module';
 import { UserModule } from 'app/layout/common/user/user.module';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-//import { PullToRefreshModule } from '@piumaz/pull-to-refresh';
 
 @NgModule({
     declarations: [

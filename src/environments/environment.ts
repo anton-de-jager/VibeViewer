@@ -3,11 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-    // production: false,
-    // api: 'https://localhost:44339',//https://localhost:49157
-    // nodeApi: 'https://luvirosapi.com:1880/vibeviewer/api'
-    production: true,
-    api: 'https://api.vibeviewer.com',
+    production: false,
+    api: 'https://localhost:44339',//https://localhost:49157
     nodeApi: 'https://luvirosapi.com:1880/vibeviewer/api'
 };
 

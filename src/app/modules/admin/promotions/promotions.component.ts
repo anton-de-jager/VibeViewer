@@ -20,8 +20,6 @@ import { UserService } from 'app/core/user/user.service';
 import { EventEmitterService } from 'app/services/event-emitter.service';
 import { Capacitor } from '@capacitor/core';
 import { DialogNotificationComponent } from 'app/controls/dialog-notification/dialog-notification.component';
-import { Browser } from '@capacitor/browser';
-import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 
 @Component({
     selector: 'promotions',
@@ -59,7 +57,6 @@ export class PromotionsComponent implements OnInit {
         private _snackBar: MatSnackBar,
         public variableService: VariableService,
         private sharedService: SharedService,
-        private fuseSplashScreenService: FuseSplashScreenService,
         private _router: Router,
         private fuseConfirmationService: FuseConfirmationService,
         private router: Router,
@@ -132,14 +129,22 @@ export class PromotionsComponent implements OnInit {
     }
 
     subscribe(){
-        this.fuseSplashScreenService.show();
-        var url = environment.api + '/api/payfast/subscription';
-        url += '/' + encodeURIComponent(this.user.id.toString()).replace(/%20/g, '+');
-        url += '/' + encodeURIComponent(this.user.email).replace(/%20/g, '+');
-        url += '/199';
-        Browser.open({ url: url, windowName: '_self' });
+        this.apiService.submitSubscription(this.user.id).subscribe(result => {
+            const dialogConfig = new MatDialogConfig();
+            
+            dialogConfig.data = { title: 'Email Sent', body: 'A subscription link has been sent to <b>' + this.user.email + '</b>' };
 
-        this.fuseSplashScreenService.hide();
+            dialogConfig.autoFocus = true;
+            dialogConfig.disableClose = true;
+            dialogConfig.hasBackdrop = true;
+            dialogConfig.ariaLabel = 'fffff';
+            dialogConfig.width = "100vw";
+            dialogConfig.maxWidth = "800px";
+            dialogConfig.panelClass = 'full-screen-modal';
+
+            const dialogRef = this.dialog.open(DialogNotificationComponent,
+                dialogConfig);
+        });
     }
 
     // getPromotions(): Promise<Promotion[]> {

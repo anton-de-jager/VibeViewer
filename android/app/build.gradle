@@ -6,8 +6,8 @@ android {
         applicationId "com.vibeviewer.app"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 139
-        versionName "2.139"
+        versionCode 140
+        versionName "2.140"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -16,10 +16,18 @@ android {
         }
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            // // [background-geolocation] Proguard-rules
+            // proguardFiles "${background_geolocation.projectDir}/proguard-rules.pro"
+            }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
+            // // [background-geolocation] Proguard-rules
+            // proguardFiles "${background_geolocation.projectDir}/proguard-rules.pro"
+            }
     }
 }
 

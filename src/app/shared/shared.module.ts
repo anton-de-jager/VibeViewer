@@ -51,6 +51,7 @@ import { DialogTermsComponent } from 'app/controls/dialog-terms/dialog-terms.com
 import { DialogQrCodeComponent } from 'app/controls/dialog-qr-code/dialog-qr-code.component';
 import { DialogAppCodeComponent } from 'app/controls/dialog-app-code/dialog-app-code.component';
 import { QRCodeModule } from 'angularx-qrcode';
+import { NgxPayPalModule } from 'ngx-paypal';
 
 @NgModule({
     imports: [
@@ -90,6 +91,7 @@ import { QRCodeModule } from 'angularx-qrcode';
         NgxMatNativeDateModule,
         TranslocoModule,
         QRCodeModule,
+        NgxPayPalModule,
         StarRatingModule.forRoot()
     ],
     exports: [
@@ -129,6 +131,7 @@ import { QRCodeModule } from 'angularx-qrcode';
         NgxMatNativeDateModule,
         TranslocoModule,
         QRCodeModule,
+        NgxPayPalModule,
         StarRatingModule
     ],
     declarations: [

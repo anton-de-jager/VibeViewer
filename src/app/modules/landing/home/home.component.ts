@@ -202,7 +202,7 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
                 }, 400);
             });
         });
-        
+
         // this.pullToRefreshService.refresh$().subscribe(() => {
         //     this.loading = true; //this.fuseSplashScreenService.show();
         //     this.imageConfig = false;
@@ -279,13 +279,33 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
                     this.lonMap = this.lonMap ? this.lonMap : res.coords.longitude;
                     //console.log('distance', this.form.controls['distance']);
                     this.apiService.getUsersList(this.form.controls['distance'].value, this.userIds, this.ratingVibe, this.ratingQuality, this.ratingPrice, this.ratingChildFriendly, this.form.controls['current'].value ? this.lat : this.latMap, this.form.controls['current'].value ? this.lon : this.lonMap, this.scrollIndex, this.orderBy).subscribe(userList => {
-                        this.list = this.addImages(userList);
-                        this.count = userList.length > 0 ? userList[0].count : 0;
-                        setTimeout(() => {
-                            this.showSlideshow = true;
-                            this.list = this.addImages(userList);
-                            resolve(true);
-                        }, 200);
+                        if (this.user) {
+                            if (this.user.id == '00000000-0000-0000-0000-000000000000') {
+                                this.list = this.addImages(userList);
+                                this.count = userList.length > 0 ? userList[0].count : 0;
+                                setTimeout(() => {
+                                    this.showSlideshow = true;
+                                    this.list = this.addImages(userList);
+                                    resolve(true);
+                                }, 200);
+                            } else {
+                                this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
+                                this.count = userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000').length > 0 ? userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')[0].count : 0;
+                                setTimeout(() => {
+                                    this.showSlideshow = true;
+                                    this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
+                                    resolve(true);
+                                }, 200);
+                            }
+                        } else {
+                            this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
+                            this.count = userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000').length > 0 ? userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')[0].count : 0;
+                            setTimeout(() => {
+                                this.showSlideshow = true;
+                                this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
+                                resolve(true);
+                            }, 200);
+                        }
                     });
                     this.apiService.getUsersFilter(100, res.coords.latitude, res.coords.longitude).subscribe(result => {
                         this.listNearby = result;
@@ -303,14 +323,23 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         this.loading = true;
         var promise = new Promise<boolean>((resolve) => {
             try {
-                console.log('distance', this.form.controls['distance']);
+                //console.log('distance', this.form.controls['distance']);
                 this.apiService.getUsersList(this.form.controls['distance'].value, this.userIds, this.ratingVibe, this.ratingQuality, this.ratingPrice, this.ratingChildFriendly, this.form.controls['current'].value ? this.lat : this.latMap, this.form.controls['current'].value ? this.lon : this.lonMap, this.scrollIndex, this.orderBy).subscribe(userList => {
-                    this.list = this.list.concat(this.addImages(userList));
-                    this.count = userList.length > 0 ? userList[0].count : 0;
-                    // setTimeout(() => {
-                    //     this.list = this.addImages(this.list);
-                    // }, 200);
-                    resolve(true);
+                    if (this.user) {
+                        if (this.user.id == '00000000-0000-0000-0000-000000000000') {
+                            this.list = this.list.concat(this.addImages(userList));
+                            this.count = userList.length > 0 ? userList[0].count : 0;
+                            resolve(true);
+                        } else {
+                            this.list = this.list.concat(this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')));
+                            this.count = userList.length > 0 ? userList[0].count : 0;
+                            resolve(true);
+                        }
+                    } else {
+                        this.list = this.list.concat(this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')));
+                        this.count = userList.length > 0 ? userList[0].count : 0;
+                        resolve(true);
+                    }
                 });
             } catch (exception) {
                 resolve(false);

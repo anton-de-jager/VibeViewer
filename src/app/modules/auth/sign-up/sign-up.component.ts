@@ -46,8 +46,8 @@ export class AuthSignUpComponent implements OnInit {
     submitClicked = false;
 
     showPlayStore = Capacitor.getPlatform() === 'web';
-    referral: string = '';
-    referralEmailExists = false;
+    //referral: string = '';
+    //referralEmailExists = false;
 
     /**
      * Constructor
@@ -65,19 +65,19 @@ export class AuthSignUpComponent implements OnInit {
     ) {
         this.route.queryParams
             .subscribe(params => {
-                if (params.r !== undefined) {
-                    localStorage.setItem('referralEmail', params.r);
-                    this.referral = params.r;
-                    this.referralEmailExists = true;
-                }
+                // if (params.r !== undefined) {
+                //     localStorage.setItem('referralEmail', params.r);
+                //     this.referral = params.r;
+                //     this.referralEmailExists = true;
+                // }
             });
-        if (this.referral == '' && localStorage.getItem('referralEmail') !== undefined) {
-            this.referral = localStorage.getItem('referralEmail');
-            this.referralEmailExists = true;
-        }
+        // if (this.referral == '' && localStorage.getItem('referralEmail') !== undefined) {
+        //     this.referral = localStorage.getItem('referralEmail');
+        //     this.referralEmailExists = true;
+        // }
         fuseSplashScreenService.show();
         this.getUserTypes().then(async result => {
-            this.userTypeList = result.sort((a, b) => (a.order > b.order) ? 1 : -1);
+            this.userTypeList = result.filter(x => x.description !== 'reseller').sort((a, b) => (a.order > b.order) ? 1 : -1);
             if (Capacitor.getPlatform() !== 'web') {
                 const geolocationEnabled = await Geolocation.checkPermissions();
 
@@ -99,7 +99,7 @@ export class AuthSignUpComponent implements OnInit {
                     lon: [this.location.lon],
                     address: [''],
                     email: [localStorage.getItem('loginEmail') !== undefined ? localStorage.getItem('loginEmail') : '', [Validators.required, Validators.email]],
-                    referralEmail: [this.referral, [Validators.email]],
+                    //referralEmail: [this.referral, [Validators.email]],
                     phone: [''],
                     web: [''],
                     password: [localStorage.getItem('loginPassword') !== undefined ? localStorage.getItem('loginPassword') : '', [Validators.required, Validators.minLength(8)]],
@@ -185,8 +185,8 @@ export class AuthSignUpComponent implements OnInit {
     signUp(): void {
         this.submitClicked = true;
         // Do nothing if the form is invalid
-        console.log(this.signUpForm.controls['userTypeId'].value);
-        console.log(this.signUpForm);
+        // console.log(this.signUpForm.controls['userTypeId'].value);
+        // console.log(this.signUpForm);
         if (this.signUpForm.invalid || (!this.fileToUpload && upperCase(this.signUpForm.controls['userTypeId'].value) !== upperCase('463AF20D-E093-4CA0-9AC1-23909DE39F9C'))) {
             return;
         }
@@ -202,9 +202,9 @@ export class AuthSignUpComponent implements OnInit {
         this.showAlert = false;
 
         this.signUpForm.controls['urlImage'].setValue('.');
-        if(this.referralEmailExists){
-            this.signUpForm.controls['referralEmail'].setValue(localStorage.getItem('referralEmail'));        
-        }
+        // if(this.referralEmailExists){
+        //     this.signUpForm.controls['referralEmail'].setValue(localStorage.getItem('referralEmail'));        
+        // }
         this.signUpForm.controls['confirmPassword'].setValue(this.signUpForm.controls['password'].value);
 
         if (upperCase(this.signUpForm.controls['userTypeId'].value) == upperCase('463AF20D-E093-4CA0-9AC1-23909DE39F9C')) {

@@ -111,7 +111,7 @@ export class PromotionsComponent implements OnInit {
     }
 
     imageClick(url) {
-        console.log(url);
+        //console.log(url);
     }
 
     getPromotions(): Promise<any[]> {

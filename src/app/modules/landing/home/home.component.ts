@@ -277,7 +277,7 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
                     this.lon = res.coords.longitude;
                     this.latMap = this.latMap ? this.latMap : res.coords.latitude;
                     this.lonMap = this.lonMap ? this.lonMap : res.coords.longitude;
-                    console.log('distance', this.form.controls['distance']);
+                    //console.log('distance', this.form.controls['distance']);
                     this.apiService.getUsersList(this.form.controls['distance'].value, this.userIds, this.ratingVibe, this.ratingQuality, this.ratingPrice, this.ratingChildFriendly, this.form.controls['current'].value ? this.lat : this.latMap, this.form.controls['current'].value ? this.lon : this.lonMap, this.scrollIndex, this.orderBy).subscribe(userList => {
                         this.list = this.addImages(userList);
                         this.count = userList.length > 0 ? userList[0].count : 0;
@@ -800,7 +800,7 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
     }
 
     ratingUpdated(element, val) {
-        console.log(element, val);
+        //console.log(element, val);
         switch (element) {
             case 'vibe':
                 this.ratingVibe = val.rating;
@@ -905,7 +905,7 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
                 },
             ],
         }).then(result => {
-            console.log(result);
+            //console.log(result);
         })
     }
 }

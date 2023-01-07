@@ -197,9 +197,9 @@ export class SettingsAccountComponent implements OnInit {
 
         this.apiService.updateUser(this.accountForm.value).subscribe({
             next: response => {
-                console.log(this.fileToUpload);
+                //console.log(this.fileToUpload);
                 if (this.fileToUpload) {
-                    console.log('in');
+                    //console.log('in');
                     this.uploadFile(this.fileToUpload, response.id + '.' + this.fileToUpload.name.split('.').pop()).then(x => {
                         this.accountForm.enable();
                         response.urlImage = '.' + this.fileToUpload.name.split('.').pop();

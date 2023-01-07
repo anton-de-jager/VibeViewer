@@ -48,7 +48,7 @@ export class DashboardComponent implements AfterViewInit {
         public apiService: ApiService,
         private _router: Router
     ) {
-        console.log('in');
+        //console.log('in');
         this.timestamp = new Date().getTime();
         this.fuseSplashScreenService.show();
         this._userService.get().subscribe(user => {
@@ -63,7 +63,7 @@ export class DashboardComponent implements AfterViewInit {
             } else {
                 var Difference_In_Time = new Date().getTime() - new Date(this.user.ts).getTime();
                 var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
-                console.log(Difference_In_Days);
+                //console.log(Difference_In_Days);
                 if (Guid.parse(this.user.statusId).toString() !== Guid.parse('8225b68c-0691-4cb7-aff2-5efe9866f434').toString() && Difference_In_Days > 14) {
                     this.router.navigateByUrl('/subscription');
                 }

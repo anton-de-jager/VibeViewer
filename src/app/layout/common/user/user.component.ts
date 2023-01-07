@@ -126,12 +126,12 @@ export class UserComponent implements OnInit, OnDestroy {
     }
     async share(){
         let url = 'https://vibeviewer.com/sign-up';
-        if(this.user !== undefined){
-            url += '?r=' + this.user.email;
-        }
+        // if(this.user !== undefined){
+        //     url += '?r=' + this.user.email;
+        // }
         await Share.share({
             title: 'Vibe Viewer',
-            text: 'find YOUR vibe',
+            text: 'Find YOUR Vibe',
             url: url,
             dialogTitle: 'Share the Vibe',
           });

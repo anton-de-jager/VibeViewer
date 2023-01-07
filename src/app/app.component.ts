@@ -104,7 +104,7 @@ export class AppComponent implements AfterViewInit, AfterContentInit {
             //this.apiService.getItemParm('devices', this.deviceId).subscribe(getDeviceRes => { });
             this.apiService.getDevice(this.deviceId).subscribe(getDeviceRes => {
                 this.fuseSplashScreenService.hide();
-                if (!getDeviceRes.accepted) {//if (!getDeviceRes.device.accepted) {
+                if (!getDeviceRes.device.accepted) {
                     const dialogConfig = new MatDialogConfig();
 
                     dialogConfig.data = {

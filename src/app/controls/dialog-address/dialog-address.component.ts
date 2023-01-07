@@ -191,7 +191,7 @@ export class DialogAddressComponent implements OnInit, AfterViewInit {
       }
     }
     Geolocation.getCurrentPosition().then(res => {
-      console.log(res);
+      //console.log(res);
       this.location.lat = res.coords.latitude;
       this.location.lon = res.coords.longitude;
       this.initMap(res.coords.latitude, res.coords.longitude);
@@ -204,12 +204,12 @@ export class DialogAddressComponent implements OnInit, AfterViewInit {
 
   async requestPermissions() {
     const permResult = await Geolocation.requestPermissions();
-    console.log('Perm request result: ', permResult);
+    //console.log('Perm request result: ', permResult);
   }
 
   async getCurrentCoordinate() {
     if (!Capacitor.isPluginAvailable('Geolocation')) {
-      console.log('Plugin geolocation not available');
+      //console.log('Plugin geolocation not available');
       return;
     }
     if (Capacitor.getPlatform() !== 'web') {
@@ -229,7 +229,7 @@ export class DialogAddressComponent implements OnInit, AfterViewInit {
         longitude: data.coords.longitude,
         accuracy: data.coords.accuracy
       };
-      console.log(this.coordinate);
+      //console.log(this.coordinate);
     }).catch(err => {
       console.error(err);
     });
@@ -238,13 +238,13 @@ export class DialogAddressComponent implements OnInit, AfterViewInit {
   watchPosition() {
     try {
       this.watchId = Geolocation.watchPosition({}, (position, err) => {
-        console.log('Watch', position);
+        //console.log('Watch', position);
         this.zone.run(() => {
           this.watchCoordinate = {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           };
-          console.log(this.watchCoordinate);
+          //console.log(this.watchCoordinate);
         });
       });
     } catch (e) {

@@ -16,7 +16,7 @@ export class DialogHistoryComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogHistoryComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    console.log(data);
+    //console.log(data);
     this.item = data.item;
     this.list = data.list.map(item => <any>{
       urlImage: item,

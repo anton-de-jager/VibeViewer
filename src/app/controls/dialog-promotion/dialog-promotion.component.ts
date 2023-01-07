@@ -86,7 +86,7 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
         file: this.dataURLtoFile(`data:image/jpeg;base64,${imageData.base64String}`!),
         maxSize: 600
       });
-      console.log(resizedImage);
+      //console.log(resizedImage);
       this.fileToUpload = this.dataURLtoFile(resizedImage);
     }, (err) => {
       console.log(err);
@@ -104,7 +104,7 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
       u8arr[n] = bstr.charCodeAt(n);
     }
 
-    console.log(new File([u8arr], 'file.' + mime.replace('image/', ''), { type: mime }));
+    //console.log(new File([u8arr], 'file.' + mime.replace('image/', ''), { type: mime }));
 
     return new File([u8arr], 'file.' + mime.replace('image/', ''), { type: mime });
   }
@@ -167,24 +167,24 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
         shape: 'pill'
       },
       onApprove: (data, actions) => {
-        console.log('onApprove - transaction was approved, but not authorized', data, actions);
+        //console.log('onApprove - transaction was approved, but not authorized', data, actions);
         //NBNBNBNB// Add to db
         this.form.controls['urlImage'].setValue(this.image);
         this.form.controls['fileToUpload'].setValue(this.fileToUpload);
-        console.log(this.form.value);
+        //console.log(this.form.value);
         this.dialogRef.close(this.form.value);
       },
       onClientAuthorization: (data) => {
-        console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
+        //console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
       },
       onCancel: (data, actions) => {
-        console.log('OnCancel', data, actions);
+        //console.log('OnCancel', data, actions);
       },
       onError: err => {
-        console.log('OnError', err);
+        //console.log('OnError', err);
       },
       onClick: (data, actions) => {
-        console.log('onClick', data, actions);
+        //console.log('onClick', data, actions);
       },
     };
   }
@@ -200,7 +200,7 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
     if (proceed) {
       this.form.controls['urlImage'].setValue(this.image);
       this.form.controls['fileToUpload'].setValue(this.fileToUpload);
-      console.log(this.form.value);
+      //console.log(this.form.value);
       this.dialogRef.close(this.form.value);
     }
   }

@@ -3,7 +3,7 @@ import { Guid } from "guid-typescript";
 export interface SignupRequest {
     userTypeId: Guid;
     email: string;
-    referralEmail: string;
+    //referralEmail: string;
     password: string;
     confirmPassword: string;
     name: string;

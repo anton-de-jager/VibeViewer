@@ -253,7 +253,7 @@ export class SubscriptionComponent implements OnInit, AfterViewInit {
 
         this.htmlForm += '<input type="submit" value="Subscribe" /></form>';
 
-        console.log(this.htmlForm);
+        //console.log(this.htmlForm);
     }
 }
 

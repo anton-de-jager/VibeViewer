@@ -1,26 +1,3 @@
-// import { NgModule } from '@angular/core';
-// import { BrowserModule } from '@angular/platform-browser';
-// import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-// import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
-// import { FuseModule } from '@fuse';
-// import { FuseConfigModule } from '@fuse/services/config';
-// import { FuseMockApiModule } from '@fuse/lib/mock-api';
-// import { CoreModule } from 'app/core/core.module';
-// import { appConfig } from 'app/core/config/app.config';
-// import { mockApiServices } from 'app/mock-api';
-// import { LayoutModule } from 'app/layout/layout.module';
-// import { AppComponent } from 'app/app.component';
-// import { appRoutes } from 'app/app.routing';
-// import { VariableService } from './services/variable.service';
-// import { ApiService } from './services/api.service';
-// import { EventEmitterService } from './services/event-emitter.service';
-// import { NotificationService } from './services/localnotification.service';
-
-// const routerConfig: ExtraOptions = {
-//     preloadingStrategy       : PreloadAllModules,
-//     scrollPositionRestoration: 'enabled'
-// };
-
 import { APP_INITIALIZER, CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,21 +16,19 @@ import { ApiService } from './services/api.service';
 import { EventEmitterService } from './services/event-emitter.service';
 import { VariableService } from './services/variable.service';
 import { NotificationService } from './services/localnotification.service';
-// import { AuthInterceptorProvider } from './interceptors/auth.interceptor';
-// import { ErrorInterceptorProvider } from './interceptors/error.interceptor';
-import { SQLiteService } from './services/sqlite.service';
-import { DetailService } from './services/detail.service';
-import { InitializeAppService } from './services/initialize.app.service';
 
-import { MigrationService } from './services/migrations.service';
-import { ProductRepository } from './repositories/data.repository';
-import { DatabaseService } from './services/database.service';
-//import { ProductDefaultQueryRepository } from './repositories/product.default.query.repository';
+// import { SQLiteService } from './services/sqlite.service';
+// import { DetailService } from './services/detail.service';
+// import { InitializeAppService } from './services/initialize.app.service';
+
+// import { MigrationService } from './services/migrations.service';
+// import { ProductRepository } from './repositories/data.repository';
+// import { DatabaseService } from './services/database.service';
 
 
-export function initializeFactory(init: InitializeAppService) {
-    return () => init.initializeApp();
-}
+// export function initializeFactory(init: InitializeAppService) {
+//     return () => init.initializeApp();
+// }
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -91,24 +66,23 @@ const routerConfig: ExtraOptions = {
         ApiService,
         EventEmitterService,
         NotificationService,
-        SQLiteService,
-        DetailService,
+        // SQLiteService,
+        // DetailService,
 
-        DatabaseService,
+        // DatabaseService,
 
-        InitializeAppService,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeFactory,
-            deps: [InitializeAppService],
-            multi: true
-        },
+        // InitializeAppService,
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: initializeFactory,
+        //     deps: [InitializeAppService],
+        //     multi: true
+        // },
 
-        MigrationService,
-        ProductRepository,
-        //ProductDefaultQueryRepository
+        // MigrationService,
+        // ProductRepository,
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
+    // schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule {
 }

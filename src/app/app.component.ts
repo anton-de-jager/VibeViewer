@@ -1,7 +1,6 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { NotificationService } from './services/localnotification.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { ApiService } from './services/api.service';
 import { Device } from '@capacitor/device';
@@ -11,15 +10,15 @@ import { Router } from '@angular/router';
 import { EventEmitterService } from './services/event-emitter.service';
 import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
-import { AppLauncher } from '@capacitor/app-launcher';
-import { PushNotifications } from '@capacitor/push-notifications';
+// import { AppLauncher } from '@capacitor/app-launcher';
+// import { PushNotifications } from '@capacitor/push-notifications';
 //import { initializeApp } from "firebase/app";
 // import { getMessaging, onMessage } from "firebase/messaging";
 // import { onBackgroundMessage } from "firebase/messaging/sw";
 //import { getAnalytics } from "firebase/analytics";
 import { DatabaseService } from './services/database.service';
 import { SQLiteService } from './services/sqlite.service';
-import { Platform } from '@ionic/angular';
+// import { Platform } from '@ionic/angular';
 
 const options: PositionOptions = {
     enableHighAccuracy: true,
@@ -118,7 +117,7 @@ export class AppComponent implements AfterViewInit, AfterContentInit {
         private fuseSplashScreenService: FuseSplashScreenService,
         private databaseService: DatabaseService,
         private sqlite: SQLiteService,
-        public platform: Platform
+        // public platform: Platform
     ) {
         // if (Capacitor.getPlatform() !== 'web') {
         //     addListeners().then(res => {

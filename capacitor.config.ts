@@ -4,7 +4,7 @@ const config: CapacitorConfig = {
   appId: 'com.vibeviewer.app',
   appName: 'Vibe Viewer',
   webDir: 'dist/vibeViewer',
-  bundledWebRuntime: false,
+  bundledWebRuntime: true,
   plugins: {
     LocalNotifications: {
       smallIcon: "ic_stat_logo_text_on_dark",

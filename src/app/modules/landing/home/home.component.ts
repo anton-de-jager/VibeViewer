@@ -29,6 +29,8 @@ import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
 import { DialogNotificationComponent } from 'app/controls/dialog-notification/dialog-notification.component';
+import { DatabaseService } from 'app/services/database.service';
+import { ProductRepository } from 'app/repositories/data.repository';
 
 const options: PositionOptions = {
     enableHighAccuracy: true,
@@ -88,6 +90,9 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         paginationPlacement: 'outside'
     };
     location: any;
+    products = [];
+    export = null;
+    newProduct = 'My cool product';
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -98,10 +103,8 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         private _formBuilder: FormBuilder,
         private bottomSheet: MatBottomSheet,
         private dialog: MatDialog,
-        private router: Router,
-        private route: ActivatedRoute
-        //private pullToRefreshService: PullToRefreshService,
-        //private fuseSplashScreenService: FuseSplashScreenService
+        private productRepository: ProductRepository,
+        //private productDefaultQueryRepository: ProductDefaultQueryRepository
     ) {
         // this.route.queryParams
         // .subscribe(params => {
@@ -186,7 +189,65 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         //     this.loading = false;
         //     this.loaded = true;
         // });
+        //this.getProducts();
     }
+
+    async getProducts() {
+        this.products = await this.productRepository.getProducts();
+        if(this.products.length == 0){
+            await this.productRepository.createTestData();
+            console.log(`Created Test Data:`);
+        }
+
+        setTimeout(() => {
+            console.log('get', this.products);
+            let product: any = {
+                id: 6,
+                name: "Product 6",
+                price: 1.99,
+                description: "This is product 6",
+                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg",
+                isAvailable: false,
+                isPopular: false,
+                category: "category 1"
+            }
+            this.createProduct(product).then(() => {
+                console.log('create', this.products);
+                setTimeout(() => {
+                    product.name = 'Produk 6';
+                    this.updateProduct(product).then(() => {
+                        console.log('update', this.products);
+                        setTimeout(() => {
+                            // this.deleteProduct(product.id).then(() => {
+                            //     console.log('delete', this.products);
+                            // })
+                        }, 1000);
+                    })
+                }, 1000);
+            })
+        }, 1000);
+
+        //normal db open db close version
+        // await this.productDefaultQueryRepository.getProducts();
+        // console.log(`default dbopen dbclose used:`);
+        // console.log(this.products);
+    }
+
+    async createProduct(product: any) {
+        await this.productRepository.createProduct(product);
+        this.products.push(product);
+    }
+
+    async updateProduct(product: any) {
+        await this.productRepository.updateProduct(product);
+        this.products.splice(this.products.findIndex(p => p.id === product.id), 1, product);
+    }
+
+    async deleteProduct(productId: number) {
+        await this.productRepository.deleteProductById(productId);
+        this.products = this.products.filter(p => p.id !== productId);
+    }
+
     ngOnInit(): void {
         this.loading = true; //this.fuseSplashScreenService.show();
         this.imageConfig = false;

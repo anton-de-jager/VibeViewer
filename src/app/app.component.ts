@@ -1,7 +1,6 @@
 import { AfterContentInit, AfterViewInit, ChangeDetectorRef, Component, NgZone } from '@angular/core';
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
-import { DataService } from './services/data.service';
 import { NotificationService } from './services/localnotification.service';
 import { Geolocation } from '@capacitor/geolocation';
 import { ApiService } from './services/api.service';
@@ -14,10 +13,13 @@ import { FuseSplashScreenService } from '@fuse/services/splash-screen';
 import { App, URLOpenListenerEvent } from '@capacitor/app';
 import { AppLauncher } from '@capacitor/app-launcher';
 import { PushNotifications } from '@capacitor/push-notifications';
-import { initializeApp } from "firebase/app";
+//import { initializeApp } from "firebase/app";
 // import { getMessaging, onMessage } from "firebase/messaging";
 // import { onBackgroundMessage } from "firebase/messaging/sw";
-import { getAnalytics } from "firebase/analytics";
+//import { getAnalytics } from "firebase/analytics";
+import { DatabaseService } from './services/database.service';
+import { SQLiteService } from './services/sqlite.service';
+import { Platform } from '@ionic/angular';
 
 const options: PositionOptions = {
     enableHighAccuracy: true,
@@ -25,18 +27,18 @@ const options: PositionOptions = {
     maximumAge: 0
 };
 
-const firebaseConfig = {
-    apiKey: "AIzaSyBueWHfVFB_qtKRoRuS4a79ePYU92Upzss",
-    authDomain: "vibeviewer.firebaseapp.com",
-    projectId: "vibeviewer",
-    storageBucket: "vibeviewer.appspot.com",
-    messagingSenderId: "271266801048",
-    appId: "1:271266801048:web:18c6a33c08ba77cc17b7ed",
-    measurementId: "G-38RHCQR2LB"
-};
+// const firebaseConfig = {
+//     apiKey: "AIzaSyBueWHfVFB_qtKRoRuS4a79ePYU92Upzss",
+//     authDomain: "vibeviewer.firebaseapp.com",
+//     projectId: "vibeviewer",
+//     storageBucket: "vibeviewer.appspot.com",
+//     messagingSenderId: "271266801048",
+//     appId: "1:271266801048:web:18c6a33c08ba77cc17b7ed",
+//     measurementId: "G-38RHCQR2LB"
+// };
 
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const app = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app);
 
 // const messaging = getMessaging();
 // onMessage(messaging, (payload) => {
@@ -54,43 +56,43 @@ const analytics = getAnalytics(app);
 //     console.log(notificationTitle, notificationOptions);
 // });
 
-const addListeners = async () => {
-    await PushNotifications.addListener('registration', token => {
-        console.info('Registration token: ', token.value);
-    });
+// const addListeners = async () => {
+//     await PushNotifications.addListener('registration', token => {
+//         console.info('Registration token: ', token.value);
+//     });
 
-    await PushNotifications.addListener('registrationError', err => {
-        console.error('Registration error: ', err.error);
-    });
+//     await PushNotifications.addListener('registrationError', err => {
+//         console.error('Registration error: ', err.error);
+//     });
 
-    await PushNotifications.addListener('pushNotificationReceived', notification => {
-        console.log('Push notification received: ', notification);
-        alert(JSON.stringify(notification));
-    });
+//     await PushNotifications.addListener('pushNotificationReceived', notification => {
+//         console.log('Push notification received: ', notification);
+//         alert(JSON.stringify(notification));
+//     });
 
-    await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
-        console.log('Push notification action performed', notification.actionId, notification.inputValue);
-    });
-}
+//     await PushNotifications.addListener('pushNotificationActionPerformed', notification => {
+//         console.log('Push notification action performed', notification.actionId, notification.inputValue);
+//     });
+// }
 
-const registerNotifications = async () => {
-    let permStatus = await PushNotifications.checkPermissions();
+// const registerNotifications = async () => {
+//     let permStatus = await PushNotifications.checkPermissions();
 
-    if (permStatus.receive === 'prompt') {
-        permStatus = await PushNotifications.requestPermissions();
-    }
+//     if (permStatus.receive === 'prompt') {
+//         permStatus = await PushNotifications.requestPermissions();
+//     }
 
-    if (permStatus.receive !== 'granted') {
-        throw new Error('User denied permissions!');
-    }
+//     if (permStatus.receive !== 'granted') {
+//         throw new Error('User denied permissions!');
+//     }
 
-    await PushNotifications.register();
-}
+//     await PushNotifications.register();
+// }
 
-const getDeliveredNotifications = async () => {
-    const notificationList = await PushNotifications.getDeliveredNotifications();
-    console.log('delivered notifications', notificationList);
-}
+// const getDeliveredNotifications = async () => {
+//     const notificationList = await PushNotifications.getDeliveredNotifications();
+//     console.log('delivered notifications', notificationList);
+// }
 
 @Component({
     selector: 'app-root',
@@ -98,33 +100,37 @@ const getDeliveredNotifications = async () => {
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit, AfterContentInit {
+    version: string = '207';
     deviceId: string;
     wait: any;
     ready: boolean = false;
     enabled: boolean = true;
-    //subscriptions: Subscription[] = [];
+    public isWeb: boolean = false;
+    private initPlugin: boolean;
 
     constructor(
         private zone: NgZone,
         private _changeDetectorRef: ChangeDetectorRef,
         private apiService: ApiService,
-        private data: DataService,
         private dialog: MatDialog,
         private router: Router,
         private eventEmitterService: EventEmitterService,
-        private fuseSplashScreenService: FuseSplashScreenService
+        private fuseSplashScreenService: FuseSplashScreenService,
+        private databaseService: DatabaseService,
+        private sqlite: SQLiteService,
+        public platform: Platform
     ) {
-        if (Capacitor.getPlatform() !== 'web') {
-            addListeners().then(res => {
-                console.log(res);
-                registerNotifications().then(res => {
-                    console.log(res);
-                    getDeliveredNotifications().then(res => {
-                        console.log(res);
-                    });
-                });
-            });
-        }
+        // if (Capacitor.getPlatform() !== 'web') {
+        //     addListeners().then(res => {
+        //         console.log(res);
+        //         registerNotifications().then(res => {
+        //             console.log(res);
+        //             getDeliveredNotifications().then(res => {
+        //                 console.log(res);
+        //             });
+        //         });
+        //     });
+        // }
 
         // AppLauncher.canOpenUrl({ url: 'com.vibeviewer.app' }).then(result => {
         //     //console.log(result);
@@ -180,13 +186,16 @@ export class AppComponent implements AfterViewInit, AfterContentInit {
         App.addListener('appRestoredResult', data => {
             //console.log('Restored state:', data);
         });
-
     }
+
     initDevice() {
         Device.getId().then(id => {
             this.deviceId = id.uuid;
             //this.apiService.getItemParm('devices', this.deviceId).subscribe(getDeviceRes => { });
             this.apiService.getDevice(this.deviceId).subscribe(getDeviceRes => {
+                // this.apiService.getItem('versions').subscribe(version => {
+                //     console.log(version.value);
+                // })
                 this.fuseSplashScreenService.hide();
                 if (!getDeviceRes.device.accepted) {
                     const dialogConfig = new MatDialogConfig();

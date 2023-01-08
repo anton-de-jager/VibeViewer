@@ -10,6 +10,9 @@ const config: CapacitorConfig = {
       smallIcon: "ic_stat_logo_text_on_dark",
       iconColor: "#F43F5E",
       sound: "beep.wav"
+    },
+    PushNotifications: {
+      presentationOptions: ["badge", "sound", "alert"],
     }
   }
 };

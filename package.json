@@ -8,7 +8,7 @@
     "scripts": {
         "ng": "ng",
         "start": "npm run copysqlwasm && ng build && npx cap sync && npx cap copy web && ng serve",
-        "build": "npm run copysqlwasm && npx cap copy web && ng build && npx cap sync",
+        "build": "ng build",
         "watch": "ng build --watch --configuration development",
         "test": "ng test",
         "lint": "ng lint",

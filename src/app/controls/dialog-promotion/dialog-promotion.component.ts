@@ -136,11 +136,11 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
           {
             amount: {
               currency_code: 'USD',
-              value: '5',
+              value: '9.90',
               breakdown: {
                 item_total: {
                   currency_code: 'USD',
-                  value: '5'
+                  value: '9.90'
                 }
               }
             },
@@ -151,7 +151,7 @@ export class DialogPromotionComponent implements OnInit, AfterViewInit {
                 category: 'DIGITAL_GOODS',
                 unit_amount: {
                   currency_code: 'USD',
-                  value: '5',
+                  value: '9.90',
                 },
               }
             ]

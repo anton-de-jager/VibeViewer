@@ -63,12 +63,12 @@
     <mat-menu [xPosition]="'before'" #userActionsNotLogged="matMenu">
         <button mat-menu-item (click)="signIn()">
             <mat-icon [svgIcon]="'heroicons_outline:user'"></mat-icon>
-            <span>Venue Owners</span>
+            <span>{{t('sign_in')}}</span>
         </button>
-        <!-- <button mat-menu-item (click)="signUp()">
+        <button mat-menu-item (click)="signUp()">
             <mat-icon [svgIcon]="'heroicons_outline:user'"></mat-icon>
             <span>{{t('sign_up')}}</span>
-        </button> -->
+        </button>
         <mat-divider class="my-2"></mat-divider>
         <button mat-menu-item (click)="selectPage('home')">
             <mat-icon [svgIcon]="'heroicons_outline:home'"></mat-icon>

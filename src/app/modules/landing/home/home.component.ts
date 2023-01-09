@@ -29,8 +29,6 @@ import { ActionSheet, ActionSheetButtonStyle } from '@capacitor/action-sheet';
 import { Capacitor } from '@capacitor/core';
 import { Device } from '@capacitor/device';
 import { DialogNotificationComponent } from 'app/controls/dialog-notification/dialog-notification.component';
-import { DatabaseService } from 'app/services/database.service';
-import { ProductRepository } from 'app/repositories/data.repository';
 
 const options: PositionOptions = {
     enableHighAccuracy: true,
@@ -90,9 +88,6 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         paginationPlacement: 'outside'
     };
     location: any;
-    products = [];
-    export = null;
-    newProduct = 'My cool product';
 
     constructor(
         private _activatedRoute: ActivatedRoute,
@@ -103,8 +98,10 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         private _formBuilder: FormBuilder,
         private bottomSheet: MatBottomSheet,
         private dialog: MatDialog,
-        private productRepository: ProductRepository,
-        //private productDefaultQueryRepository: ProductDefaultQueryRepository
+        private router: Router,
+        private route: ActivatedRoute
+        //private pullToRefreshService: PullToRefreshService,
+        //private fuseSplashScreenService: FuseSplashScreenService
     ) {
         // this.route.queryParams
         // .subscribe(params => {
@@ -189,65 +186,7 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         //     this.loading = false;
         //     this.loaded = true;
         // });
-        //this.getProducts();
     }
-
-    async getProducts() {
-        this.products = await this.productRepository.getProducts();
-        if(this.products.length == 0){
-            await this.productRepository.createTestData();
-            console.log(`Created Test Data:`);
-        }
-
-        setTimeout(() => {
-            console.log('get', this.products);
-            let product: any = {
-                id: 6,
-                name: "Product 6",
-                price: 1.99,
-                description: "This is product 6",
-                imageUrl: "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg",
-                isAvailable: false,
-                isPopular: false,
-                category: "category 1"
-            }
-            this.createProduct(product).then(() => {
-                console.log('create', this.products);
-                setTimeout(() => {
-                    product.name = 'Produk 6';
-                    this.updateProduct(product).then(() => {
-                        console.log('update', this.products);
-                        setTimeout(() => {
-                            // this.deleteProduct(product.id).then(() => {
-                            //     console.log('delete', this.products);
-                            // })
-                        }, 1000);
-                    })
-                }, 1000);
-            })
-        }, 1000);
-
-        //normal db open db close version
-        // await this.productDefaultQueryRepository.getProducts();
-        // console.log(`default dbopen dbclose used:`);
-        // console.log(this.products);
-    }
-
-    async createProduct(product: any) {
-        await this.productRepository.createProduct(product);
-        this.products.push(product);
-    }
-
-    async updateProduct(product: any) {
-        await this.productRepository.updateProduct(product);
-        this.products.splice(this.products.findIndex(p => p.id === product.id), 1, product);
-    }
-
-    async deleteProduct(productId: number) {
-        await this.productRepository.deleteProductById(productId);
-        this.products = this.products.filter(p => p.id !== productId);
-    }
-
     ngOnInit(): void {
         this.loading = true; //this.fuseSplashScreenService.show();
         this.imageConfig = false;
@@ -263,7 +202,7 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
                 }, 400);
             });
         });
-
+        
         // this.pullToRefreshService.refresh$().subscribe(() => {
         //     this.loading = true; //this.fuseSplashScreenService.show();
         //     this.imageConfig = false;
@@ -340,33 +279,13 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
                     this.lonMap = this.lonMap ? this.lonMap : res.coords.longitude;
                     //console.log('distance', this.form.controls['distance']);
                     this.apiService.getUsersList(this.form.controls['distance'].value, this.userIds, this.ratingVibe, this.ratingQuality, this.ratingPrice, this.ratingChildFriendly, this.form.controls['current'].value ? this.lat : this.latMap, this.form.controls['current'].value ? this.lon : this.lonMap, this.scrollIndex, this.orderBy).subscribe(userList => {
-                        if (this.user) {
-                            if (this.user.id == '00000000-0000-0000-0000-000000000000') {
-                                this.list = this.addImages(userList);
-                                this.count = userList.length > 0 ? userList[0].count : 0;
-                                setTimeout(() => {
-                                    this.showSlideshow = true;
-                                    this.list = this.addImages(userList);
-                                    resolve(true);
-                                }, 200);
-                            } else {
-                                this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
-                                this.count = userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000').length > 0 ? userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')[0].count : 0;
-                                setTimeout(() => {
-                                    this.showSlideshow = true;
-                                    this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
-                                    resolve(true);
-                                }, 200);
-                            }
-                        } else {
-                            this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
-                            this.count = userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000').length > 0 ? userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')[0].count : 0;
-                            setTimeout(() => {
-                                this.showSlideshow = true;
-                                this.list = this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000'));
-                                resolve(true);
-                            }, 200);
-                        }
+                        this.list = this.addImages(userList);
+                        this.count = userList.length > 0 ? userList[0].count : 0;
+                        setTimeout(() => {
+                            this.showSlideshow = true;
+                            this.list = this.addImages(userList);
+                            resolve(true);
+                        }, 200);
                     });
                     this.apiService.getUsersFilter(100, res.coords.latitude, res.coords.longitude).subscribe(result => {
                         this.listNearby = result;
@@ -384,23 +303,14 @@ export class LandingHomeComponent implements OnInit, AfterViewInit {
         this.loading = true;
         var promise = new Promise<boolean>((resolve) => {
             try {
-                //console.log('distance', this.form.controls['distance']);
+                console.log('distance', this.form.controls['distance']);
                 this.apiService.getUsersList(this.form.controls['distance'].value, this.userIds, this.ratingVibe, this.ratingQuality, this.ratingPrice, this.ratingChildFriendly, this.form.controls['current'].value ? this.lat : this.latMap, this.form.controls['current'].value ? this.lon : this.lonMap, this.scrollIndex, this.orderBy).subscribe(userList => {
-                    if (this.user) {
-                        if (this.user.id == '00000000-0000-0000-0000-000000000000') {
-                            this.list = this.list.concat(this.addImages(userList));
-                            this.count = userList.length > 0 ? userList[0].count : 0;
-                            resolve(true);
-                        } else {
-                            this.list = this.list.concat(this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')));
-                            this.count = userList.length > 0 ? userList[0].count : 0;
-                            resolve(true);
-                        }
-                    } else {
-                        this.list = this.list.concat(this.addImages(userList.filter(x => x.id != '00000000-0000-0000-0000-000000000000')));
-                        this.count = userList.length > 0 ? userList[0].count : 0;
-                        resolve(true);
-                    }
+                    this.list = this.list.concat(this.addImages(userList));
+                    this.count = userList.length > 0 ? userList[0].count : 0;
+                    // setTimeout(() => {
+                    //     this.list = this.addImages(this.list);
+                    // }, 200);
+                    resolve(true);
                 });
             } catch (exception) {
                 resolve(false);

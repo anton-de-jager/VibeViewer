@@ -12,37 +12,15 @@ const providers = [
     { provide: 'BASE_URL', useFactory: getBaseUrl, deps: [] }
 ];
 
-import { defineCustomElements as pwaElements} from '@ionic/pwa-elements/loader';
-import { defineCustomElements as jeepSqlite} from 'jeep-sqlite/loader';
-import { Capacitor } from '@capacitor/core';
-import { CapacitorSQLite, SQLiteConnection } from '@capacitor-community/sqlite';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 if (environment.production) {
     enableProdMode();
 }
 
-pwaElements(window);
-jeepSqlite(window);
-window.addEventListener('DOMContentLoaded', async () => {
-  const platform = Capacitor.getPlatform();
-  const sqlite: SQLiteConnection = new SQLiteConnection(CapacitorSQLite)
-  try {
-    if(platform === "web") {
-      console.log('in index.ts')
-      const jeepEl = document.createElement("jeep-sqlite");
-      document.body.appendChild(jeepEl);
-      await customElements.whenDefined('jeep-sqlite');
-      console.log('in index.ts after customElements')
-      await sqlite.initWebStore();
-      console.log('after sqlite.initWebStore()');   
-    }
-    await sqlite.checkConnectionsConsistency();
+platformBrowserDynamic(providers)
+    .bootstrapModule(AppModule)
+    .catch(err => console.log(err));
 
-    platformBrowserDynamic(providers).bootstrapModule(AppModule)
-      .catch(err => console.log(err));
-  } catch (err) {
-    console.log(`Error: ${err}`);
-    throw new Error(`Error: ${err}`)
-  }
-  
-});
+// Call the element loader after the platform has been bootstrapped
+defineCustomElements(window);                        
